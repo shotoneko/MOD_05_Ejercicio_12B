@@ -6,28 +6,32 @@ import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MainViewModel : ViewModel() {
 
-    val _showAlert = MutableLiveData<Boolean>()
-   // var showAlert: LiveData<Boolean> = _showAlert
+    private val _showAlert = MutableStateFlow<Boolean>(false)
+    var showAlert: StateFlow<Boolean> = _showAlert
 
-    private val _edad = MutableLiveData<String>()
-    var edad: LiveData<String> = _edad
+    private val _edad = MutableStateFlow("")
+    val edad: StateFlow<String> = _edad.asStateFlow()
 
-    private val _peso = MutableLiveData<Double>()
-    val peso: LiveData<Double> = _peso
+    private val _peso = MutableStateFlow(0.0)
+    val peso: StateFlow<Double> = _peso.asStateFlow()
 
-    private val _altura = MutableLiveData<Int>()
-    val altura: LiveData<Int> = _altura
+    private val _altura = MutableStateFlow(0)
+    val altura: StateFlow<Int> = _altura.asStateFlow()
 
-    private var _imc = MutableLiveData<Double>()
-    var imc: LiveData<Double> = _imc
+    private var _imc = MutableStateFlow(0.0)
+    var imc: StateFlow<Double> = _imc.asStateFlow()
 
     fun onMainScreenChanged(edad: String, peso: String, altura: String){
         _edad.value = edad
         validaEdad(edad)
         try {
+
             _peso.value = peso.toDouble()
             _altura.value = altura.toInt()
 
@@ -40,7 +44,9 @@ class MainViewModel : ViewModel() {
 
 
     }
-
+    fun upDateShowAlert(value: Boolean){
+        _showAlert.value = value
+    }
     fun calcularIMC(peso: Double, altura: Double): Double {
         val imc = peso / (altura * altura) * 10000
         val df = DecimalFormat("#.##")
@@ -56,16 +62,16 @@ class MainViewModel : ViewModel() {
 
     }
 
-    fun validaEdad(edad: String) {
+        fun validaEdad(edad: String) {
         if (edad.length >= 4) {
             _edad.value = edad.substring(0, 3)
         } else {
 
             try {
-                if (edad.toInt() < 1 || edad.toInt() > 120) {
-                    _showAlert.value = true
-                } else {
+                if (edad.toInt() in 1..120) {
                     _showAlert.value = false
+                } else {
+                    _showAlert.value = true
                 }
 
             } catch (e: NumberFormatException) {
@@ -73,4 +79,7 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+
+
 }

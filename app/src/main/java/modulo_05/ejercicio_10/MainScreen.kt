@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.asLiveData
 import modulo_05.ejercicio_10.components.Alert
 import modulo_05.ejercicio_10.components.MainButton
 import modulo_05.ejercicio_10.components.MySegmentedButton
@@ -43,11 +45,11 @@ fun MainScreen(paddingValues: PaddingValues, viewModel: MainViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        val edad by viewModel.edad.observeAsState(initial = "")
-        val peso by viewModel.peso.observeAsState(initial = "")
-        val altura by viewModel.altura.observeAsState(initial = "")
-        val imc by viewModel.imc.observeAsState(initial = 0.0)
-        val showAlert by viewModel._showAlert.observeAsState(initial = false)
+        val edad by viewModel.edad.collectAsState(initial = "")
+        val peso by viewModel.peso.collectAsState(initial = "")
+        val altura by viewModel.altura.collectAsState(initial = "")
+        val imc by viewModel.imc.collectAsState(initial = "")
+        val showAlert by viewModel.showAlert.collectAsState(initial = false)
 
 
         MyText(text = stringResource(id = R.string.tituloApp))
@@ -60,10 +62,10 @@ fun MainScreen(paddingValues: PaddingValues, viewModel: MainViewModel) {
         )
         {
             MyTextField(
-                text = edad,
+                text = edad.toString(),
                 onValueChange = {
                     viewModel.onMainScreenChanged(
-                        edad = it,
+                        edad = it.toString(),
                         peso.toString(),
                         altura.toString(),
 
@@ -75,7 +77,7 @@ fun MainScreen(paddingValues: PaddingValues, viewModel: MainViewModel) {
                 text = peso.toString(),
                 onValueChange = {peso ->
                     viewModel.onMainScreenChanged(
-                        edad,
+                        edad.toString(),
                         peso = peso,
                         altura = altura.toString()
                     )
@@ -86,7 +88,7 @@ fun MainScreen(paddingValues: PaddingValues, viewModel: MainViewModel) {
                 text = altura.toString(),
                 onValueChange = {
                     viewModel.onMainScreenChanged(
-                        edad,
+                        edad.toString(),
                         peso = peso.toString(),
                         altura = it
                     )
@@ -104,11 +106,11 @@ fun MainScreen(paddingValues: PaddingValues, viewModel: MainViewModel) {
 
             if (showAlert) {
                 AlertDialog(
-                    onDismissRequest = { viewModel._showAlert.value = false },
+                    onDismissRequest = { viewModel.upDateShowAlert(false) },
                     title = { Text("Alerta") },
                     text = { Text("La edad debe estar entre 1 y 120") },
                     confirmButton = {
-                        Button(onClick = { viewModel._showAlert.value = false }) {
+                        Button(onClick = { viewModel.upDateShowAlert(false)}) {
                             Text("Aceptar")
                         }
                     }
