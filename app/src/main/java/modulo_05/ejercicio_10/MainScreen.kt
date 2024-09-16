@@ -51,6 +51,9 @@ fun MainScreen(paddingValues: PaddingValues, viewModel: MainViewModel) {
         val imc by viewModel.imc.collectAsState(initial = "")
         val showAlert by viewModel.showAlert.collectAsState(initial = false)
 
+        val s_peso = peso.toString()
+        val s_altura = altura.toString()
+
 
         MyText(text = stringResource(id = R.string.tituloApp))
         MySegmentedButton()
@@ -62,12 +65,12 @@ fun MainScreen(paddingValues: PaddingValues, viewModel: MainViewModel) {
         )
         {
             MyTextField(
-                text = edad.toString(),
+                text = edad,
                 onValueChange = {
                     viewModel.onMainScreenChanged(
-                        edad = it.toString(),
-                        peso.toString(),
-                        altura.toString(),
+                        edad = it,
+                        peso = s_peso,
+                        altura= s_altura
 
                         )
                 },
@@ -77,9 +80,9 @@ fun MainScreen(paddingValues: PaddingValues, viewModel: MainViewModel) {
                 text = peso.toString(),
                 onValueChange = {peso ->
                     viewModel.onMainScreenChanged(
-                        edad.toString(),
+                        edad = edad ,
                         peso = peso,
-                        altura = altura.toString()
+                        altura = s_altura
                     )
                 },
                 label = stringResource(id = R.string.peso)
@@ -88,8 +91,8 @@ fun MainScreen(paddingValues: PaddingValues, viewModel: MainViewModel) {
                 text = altura.toString(),
                 onValueChange = {
                     viewModel.onMainScreenChanged(
-                        edad.toString(),
-                        peso = peso.toString(),
+                        edad = edad,
+                        peso = s_peso,
                         altura = it
                     )
                 },

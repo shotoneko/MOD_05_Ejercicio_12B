@@ -31,23 +31,20 @@ class MainViewModel : ViewModel() {
         _edad.value = edad
         validaEdad(edad)
         try {
-
             _peso.value = peso.toDouble()
             _altura.value = altura.toInt()
 
             if (!peso.isBlank() && !altura.isBlank() && altura.toInt() !=0) {
-                _imc.value = calcularIMC(peso.toDouble(), altura.toDouble())
+                _imc.value = calcularIMC(_peso.value, _altura.value)
             }
         } catch (e: NumberFormatException) {
 
         }
-
-
     }
     fun upDateShowAlert(value: Boolean){
         _showAlert.value = value
     }
-    fun calcularIMC(peso: Double, altura: Double): Double {
+    fun calcularIMC(peso: Double, altura: Int): Double {
         val imc = peso / (altura * altura) * 10000
         val df = DecimalFormat("#.##")
         val imcFormateado = df.format(imc)
@@ -62,7 +59,7 @@ class MainViewModel : ViewModel() {
 
     }
 
-        fun validaEdad(edad: String) {
+    fun validaEdad(edad: String) {
         if (edad.length >= 4) {
             _edad.value = edad.substring(0, 3)
         } else {
